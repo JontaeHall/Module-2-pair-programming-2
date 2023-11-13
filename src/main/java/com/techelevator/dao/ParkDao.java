@@ -13,4 +13,6 @@ public interface ParkDao {
 	 * @return a List of Park objects
 	 */
     List<Park> getParks();
+
+	List<Park> getParks(int parkId);
 }

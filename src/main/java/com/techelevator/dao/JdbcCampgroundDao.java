@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcCampgroundDao implements CampgroundDao {
+    private final String SELECT_CAMPGROUND = "SELECT campground_id, "+
+            "park_id, name, open_from_mm, open_to_mm, daily_fee FROM campground ";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -18,12 +20,24 @@ public class JdbcCampgroundDao implements CampgroundDao {
 
     @Override
     public Campground getCampgroundById(int id) {
-        return null;
+        Campground campground = null;
+        String sql = SELECT_CAMPGROUND + "WHERE campground_id = ?";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+            if(rowSet.next()){
+                campground = mapRowToCampground(rowSet);
+            }
+        return campground;
     }
 
     @Override
     public List<Campground> getCampgroundsByParkId(int parkId) {
-        return new ArrayList<>();
+        List<Campground> campgrounds = new ArrayList<>();
+        String sql = SELECT_CAMPGROUND + "WHERE park_id = ?";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, parkId);
+        while(rowSet.next()){
+            campgrounds.add(mapRowToCampground(rowSet));
+        }
+        return campgrounds;
     }
 
     private Campground mapRowToCampground(SqlRowSet results) {

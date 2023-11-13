@@ -8,6 +8,8 @@ import javax.sql.DataSource;
 
 public class JdbcReservationDao implements ReservationDao {
 
+    private  final String SELECT_RESERVATION = "SELECT DISTINCT reservation_id, "+
+            "site_id, name, from_date, to_date, create_date FROM reservation ";
     private JdbcTemplate jdbcTemplate;
 
     public JdbcReservationDao(DataSource dataSource) {
@@ -16,14 +18,22 @@ public class JdbcReservationDao implements ReservationDao {
 
     @Override 
     public Reservation getReservationById(int id) {
-
-        return null;
+        Reservation reservation = null;
+        String sql = SELECT_RESERVATION + "WHERE reservation_id = ?";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+        if(rowSet.next()){
+            reservation = mapRowToReservation(rowSet);
+        }
+        return reservation;
     }
 
     @Override
     public Reservation createReservation(Reservation reservation) {
+        String sql = "INSERT  INTO reservation (reservation_id, site_id, name, from_date, to_date, create_date) "+
+                "VALUES (?, ?, ?, ?, ?, ?) RETURNING reservation_id;";
+        int reservationID = jdbcTemplate.queryForObject(sql,int.class, reservation.getReservationId(),reservation.getSiteId(), reservation.getName(), reservation.getFromDate(), reservation.getToDate(), reservation.getCreateDate());
 
-        return new Reservation();
+        return getReservationById(reservationID);
     }
 
     private Reservation mapRowToReservation(SqlRowSet results) {

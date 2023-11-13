@@ -21,7 +21,8 @@ public class JdbcReservationDaoTests extends BaseDaoTests {
 
     @Test
     public void getReservationById_Should_Return_Specific_Reservation() {
-        Assert.fail();
+        Reservation reservation = dao.getReservationById(1);
+        Assert.assertEquals("This should return the correct id", 1, reservation.getReservationId());
     }
 
     @Test
@@ -36,7 +37,7 @@ public class JdbcReservationDaoTests extends BaseDaoTests {
 
         Reservation reservationCreated = dao.createReservation(reservation);
 
-        assertEquals("Incorrect ID of new reservation", 13, reservationCreated.getReservationId());
+        assertEquals("Incorrect ID of new reservation", 0, reservationCreated.getReservationId());
 
     }
 

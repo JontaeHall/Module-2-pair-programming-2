@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcParkDao implements ParkDao {
-
+    private  final String SELECT_PARK = "SELECT park_id, name, location, establish_date, "+
+            "area, visitors, description FROM park ";
     private JdbcTemplate jdbcTemplate;
 
     public JdbcParkDao(DataSource dataSource) {
@@ -18,7 +19,18 @@ public class JdbcParkDao implements ParkDao {
 
     @Override
     public List<Park> getParks() {
-        return new ArrayList<>();
+        return null;
+    }
+
+    @Override
+    public List<Park> getParks(int parkId) {
+        List<Park> parks = new ArrayList<>();
+    String sql = SELECT_PARK;
+    SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql);
+    while(rowSet.next()){
+        parks.add(mapRowToPark(rowSet));
+    }
+    return  parks;
     }
 
     private Park mapRowToPark(SqlRowSet results) {

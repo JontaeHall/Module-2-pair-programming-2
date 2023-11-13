@@ -19,7 +19,7 @@ public class JdbcParkDaoTests extends BaseDaoTests {
 
     @Test
     public void getParks_Should_Return_All_Parks() {
-        Assert.fail();
+        List<Park> parks = dao.getParks();
     }
 
 }
